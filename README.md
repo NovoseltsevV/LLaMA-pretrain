@@ -1,53 +1,53 @@
-## Предобучение LLaMA с нуля
+## Pretraining LLaMA from Scratch
 
-В этом проекте реализована модель трансформера на ~200M параметров, вдохновлённая оригинальной статьёй [LLaMA](https://arxiv.org/abs/2302.13971).
+This project implements a transformer model with ~200M parameters, inspired by the original [LLaMA](https://arxiv.org/abs/2302.13971) paper.
 
-Архитектура включает современные улучшения:
+The architecture includes modern improvements:
 - RoPE (Rotary Position Embeddings)
 - SwiGLU
 - RMSNorm
 - Pre-normalization
 
-Модель обучалась с нуля на одной восьмой датасета [OpenWebText](https://skylion007.github.io/OpenWebTextCorpus/), всего было обработано **250М токенов**.
+The model was trained from scratch on one-eighth of the [OpenWebText](https://skylion007.github.io/OpenWebTextCorpus/) dataset, with a total of **250M tokens** processed.
 
 ---
 
-## Графики обучения
+## Training Curves
 
-Обучение проводилось на одной видеокарте в Google Colab и ограничением по времени 4 часа. Поэтому каждый цвет на графиках — это запуск обучения в новом сеансе c сохранением и продолжением обучения из чекпоинтов, сохранённых на Google Drive.
+Training was performed on a single GPU in Google Colab with a time limit of 4 hours. Therefore, each color on the graphs represents a new session start with checkpoint loading and continued training from the saved checkpoints on Google Drive.
 
 <p align="center">
-  <img src="images/training_curves.png" alt="Графики обучения" width="800"/>
+  <img src="images/training_curves.png" alt="Training Curves" width="800"/>
 </p>
 
 ---
 
-## Структура репозитория
+## Repository Structure
 
-- `model.py` — классы архитектуры модели
-- `train_loop.py` — тренировочный цикл:
-  - остановка по количеству токенов
-  - накопление градиентов
-  - смешанная точность (`torch.autocast`)
-  - сохранение и загрузка чекпоинтов
-- `data_preprocess.py` — подготовка данных:
-  - объединение строк из батча в одну строку
-  - разбиение полученной строки на последовательности максимальной длины без паддингов
-  - создание `DataLoader`
-- `drive_managment.py` — очистка корзины Google Drive из Google Colab
-
----
-
-## Особенности обучения
-
-- Использование `torch.autocast` для экономии памяти
-- FlashAttention для ускорения внимания
-- Трекер обучения — [Weights & Biases](https://wandb.ai)
-- Все сессии запускались на Google Colab, с сохранением прогресса
+- `model.py` — model architecture classes
+- `train_loop.py` — training loop:
+  - stopping by number of processed tokens
+  - gradient accumulation
+  - mixed precision (`torch.autocast`)
+  - checkpoint saving and loading
+- `data_preprocess.py` — data preparation:
+  - merges lines from a batch into a single string
+  - splits the resulting string into sequences of maximum length without padding
+  - creates `DataLoader`
+- `drive_managment.py` — Google Drive trash cleanup from Google Colab
 
 ---
 
-## Планы
+## Training Features
 
-- Увеличение длины контекста модели с помощью [Position Interpolation](https://arxiv.org/pdf/2306.15595)
-- Оценка на [tinyMMLU](https://huggingface.co/datasets/tinyBenchmarks/tinyMMLU) бенчмарке
+- Use of `torch.autocast` to reduce memory usage
+- FlashAttention to speed up attention
+- Training tracker — [Weights & Biases](https://wandb.ai)
+- All sessions were launched on Google Colab with progress saved
+
+---
+
+## Plans
+
+- Increase model context length using [Position Interpolation](https://arxiv.org/pdf/2306.15595)
+- Evaluation on the [tinyMMLU](https://huggingface.co/datasets/tinyBenchmarks/tinyMMLU) benchmark
